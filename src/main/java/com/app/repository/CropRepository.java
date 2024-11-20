@@ -69,7 +69,7 @@ public class CropRepository {
     }
 
     public int updateCrop(Long id, Crop crop) {
-        String sql = "UPDATE crops SET name = ?, type = ?, quantity = ?, farmer_id = ?,cropCode=?,price=?, WHERE id = ?";
+        String sql = "UPDATE crops SET name = ?, type = ?, quantity = ?, farmer_id = ?,cropCode=?,price=? WHERE id = ?";
         return jdbcTemplate.update(sql, crop.getName(), crop.getType(), crop.getQuantity(), crop.getFarmerId(),
                 crop.getCropCode(), crop.getPrice(), id);
     }

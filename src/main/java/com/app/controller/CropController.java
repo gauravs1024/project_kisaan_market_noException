@@ -54,8 +54,12 @@ public class CropController {
         return ResponseEntity.ok("Crop updated successfully");
     }
 
-    @DeleteMapping("/delete/{cropId}")
-    public ResponseEntity<String> deleteCrop(@PathVariable Long cropId) {
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteCrop(@RequestBody Map<String, Long> requestbody) {
+        Long cropId = requestbody.get("cropId");
+        if (cropId == null) {
+            return ResponseEntity.badRequest().body("Crop ID is required");
+        }
         cropService.deleteCrop(cropId);
         return ResponseEntity.ok("Crop deleted successfully");
     }
