@@ -1,12 +1,9 @@
 package com.app.repository;
-
 import com.app.model.UserDtls;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-
 import javax.sql.DataSource;
 
 @Repository
