@@ -1,15 +1,31 @@
 package com.app.model;
 
-
 public class Crop {
 
     private Long id;
+    private String cropCode;
     private String name;
     private String type;
+    private int price;
     private int quantity;
-    private Long farmerId;  
+    private Long farmerId;
 
-    
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public String getCropCode() {
+        return cropCode;
+    }
+
+    public void setCropCode(String cropCode) {
+        this.cropCode = cropCode;
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,4 +66,3 @@ public class Crop {
         this.farmerId = farmerId;
     }
 }
-

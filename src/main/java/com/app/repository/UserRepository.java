@@ -19,6 +19,7 @@ public class UserRepository {
         jdbcTemplate.update(sql, user.getName(), user.getPhoneNumber(), user.getPassword());
     }
 
+    @SuppressWarnings("deprecation")
     public UserDtls findByPhoneNumber(String phoneNumber) {
         String sql = "SELECT * FROM users WHERE phoneNumber = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{phoneNumber}, (rs, rowNum) -> {
