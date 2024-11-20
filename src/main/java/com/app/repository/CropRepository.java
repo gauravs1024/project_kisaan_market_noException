@@ -15,8 +15,9 @@ public class CropRepository {
     private JdbcTemplate jdbcTemplate;
 
     public int addCrop(Crop crop) {
-        String sql = "INSERT INTO crops (name, type, quantity, farmer_id) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, crop.getName(), crop.getType(), crop.getQuantity(), crop.getFarmerId());
+        String sql = "INSERT INTO crops (name, type, quantity, farmer_id, cropCode , price) VALUES (?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, crop.getName(), crop.getType(), crop.getQuantity(), crop.getFarmerId(),
+                crop.getCropCode(), crop.getPrice());
     }
 
     @SuppressWarnings("deprecation")
@@ -29,6 +30,8 @@ public class CropRepository {
             crop.setType(rs.getString("type"));
             crop.setQuantity(rs.getInt("quantity"));
             crop.setFarmerId(rs.getLong("farmer_id"));
+            crop.setCropCode(rs.getString("cropCode"));
+            crop.setPrice(rs.getInt("price"));
             return crop;
         });
     }
@@ -43,6 +46,8 @@ public class CropRepository {
             crop.setType(rs.getString("type"));
             crop.setQuantity(rs.getInt("quantity"));
             crop.setFarmerId(rs.getLong("farmer_id"));
+            crop.setCropCode(rs.getString("cropCode"));
+            crop.setPrice(rs.getInt("price"));
             return crop;
         });
     }
@@ -57,13 +62,16 @@ public class CropRepository {
             crop.setType(rs.getString("type"));
             crop.setQuantity(rs.getInt("quantity"));
             crop.setFarmerId(rs.getLong("farmer_id"));
+            crop.setCropCode(rs.getString("cropCode"));
+            crop.setPrice(rs.getInt("price"));
             return crop;
         });
     }
 
     public int updateCrop(Long id, Crop crop) {
-        String sql = "UPDATE crops SET name = ?, type = ?, quantity = ?, farmer_id = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, crop.getName(), crop.getType(), crop.getQuantity(), crop.getFarmerId(), id);
+        String sql = "UPDATE crops SET name = ?, type = ?, quantity = ?, farmer_id = ?,cropCode=?,price=?, WHERE id = ?";
+        return jdbcTemplate.update(sql, crop.getName(), crop.getType(), crop.getQuantity(), crop.getFarmerId(),
+                crop.getCropCode(), crop.getPrice(), id);
     }
 
     public int deleteCrop(Long id) {
