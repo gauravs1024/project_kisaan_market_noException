@@ -2,6 +2,9 @@ package com.app.service;
 
 import com.app.model.UserDtls;
 import com.app.repository.UserRepository;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,5 +25,8 @@ public class UserService {
             return user; 
         }
         return null; 
+    }
+    public List<String> getFarmerNamesByCropCode(String cropCode) {
+        return userRepository.findFarmerNamesByCropCode(cropCode);
     }
 }

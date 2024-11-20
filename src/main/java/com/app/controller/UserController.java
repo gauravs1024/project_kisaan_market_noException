@@ -1,7 +1,12 @@
 package com.app.controller;
 
+import com.app.dto.CropRequest;
 import com.app.model.UserDtls;
 import com.app.service.UserService;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,5 +32,18 @@ public class UserController {
         }
         return "Invalid phone number or password.";
     }
+
+    @PostMapping("/farmers")
+    public ResponseEntity<List<String>> getFarmerNamesByCropCode(@RequestBody CropRequest cropRequest) {
+        try {
+            List<String> farmerNames = userService.getFarmerNamesByCropCode(cropRequest.getCropCode());
+            if (farmerNames.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content
+            }
+            return ResponseEntity.ok(farmerNames); // 200 OK
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error
+            return ResponseEntity.status(500).build(); 
+        }}
 
 }

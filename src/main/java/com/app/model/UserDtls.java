@@ -4,8 +4,15 @@ public class UserDtls {
     private int id;
     private String name;
     private String phoneNumber;
+    private String role;
     private String password;
 
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
     // Getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
