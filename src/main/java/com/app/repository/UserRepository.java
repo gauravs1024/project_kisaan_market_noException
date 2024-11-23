@@ -1,4 +1,5 @@
 package com.app.repository;
+import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +32,11 @@ public class UserRepository {
             user.setRole(rs.getString("role"));
             return user;
         });
+    }
+
+    public void saveFarmerDetail(FarmerRegisDetails farmer) {
+        String sql = "insert into farmer_details (farmerType, state, city,area,pincode) values(?,?,?,?,?)";
+        jdbcTemplate.update(sql, farmer.getFarmerType(),farmer.getState(),farmer.getCity(),farmer.getArea(),farmer.getPincode());
     }
 
     @SuppressWarnings("unused")

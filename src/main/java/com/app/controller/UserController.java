@@ -1,12 +1,16 @@
 package com.app.controller;
 
 import com.app.dto.CropRequest;
+import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.service.UserService;
+
+// import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+// import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +28,11 @@ public class UserController {
         return "User registered successfully!";
     }
 
+    // @GetMapping("/csrf-token")
+    // public CsrfToken getCsrfToken(HttpServletRequest request){
+    //     return (CsrfToken) request.getAttribute("_csrf");
+    // }
+
     @PostMapping("/login")
     public String login(@RequestBody UserDtls userDtls) {
         UserDtls user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
@@ -31,6 +40,12 @@ public class UserController {
             return "Login successful! Welcome, " + user.getName();
         }
         return "Invalid phone number or password.";
+    }
+
+    @PostMapping("/farmer-register")
+    public String farmerRegi(@RequestBody FarmerRegisDetails farmer){
+        userService.farmerRegister(farmer);
+        return "Farmer registered successfully!";
     }
 
     @PostMapping("/farmers")

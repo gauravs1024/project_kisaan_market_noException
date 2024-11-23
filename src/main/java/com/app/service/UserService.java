@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.repository.UserRepository;
 
@@ -17,6 +18,10 @@ public class UserService {
 
     public void registerUser(UserDtls user) {
         userRepository.save(user);
+    }
+
+    public void farmerRegister(FarmerRegisDetails farmer){
+        userRepository.saveFarmerDetail(farmer);
     }
 
     public UserDtls login(String phoneNumber, String password) {
