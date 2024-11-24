@@ -33,7 +33,9 @@ public class CropService {
         return cropRepository.getCropsByFarmerId(farmerId);
     }
 
-
+    public Crop getCropByCode(String cropCode) {
+        return cropRepository.findCropByCode(cropCode);
+    }
    
     public int updateCrop(Long cropId, Crop crop) {
         return cropRepository.updateCrop(cropId, crop);

@@ -2,6 +2,7 @@ package com.app.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.app.model.Crop;
@@ -50,6 +51,27 @@ public class CropRepository {
             crop.setPrice(rs.getInt("price"));
             return crop;
         });
+    }
+    
+    private RowMapper<Crop> cropRowMapper() {
+        return (rs, rowNum) -> {
+            Crop crop = new Crop();
+            crop.setId(rs.getLong("id"));
+            crop.setCropCode(rs.getString("cropCode"));
+            crop.setName(rs.getString("name"));
+            crop.setType(rs.getString("type"));
+            crop.setPrice(rs.getInt("price"));
+            crop.setQuantity(rs.getInt("quantity"));
+            crop.setFarmerId(rs.getLong("farmer_id"));
+            return crop;
+        };
+    }
+
+    // Method to fetch crop details by cropCode
+    @SuppressWarnings("deprecation")
+    public Crop findCropByCode(String cropCode) {
+        String sql = "SELECT * FROM crops WHERE cropCode = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{cropCode}, cropRowMapper());
     }
 
     @SuppressWarnings("deprecation")
