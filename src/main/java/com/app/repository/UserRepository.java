@@ -35,8 +35,8 @@ public class UserRepository {
     }
 
     public void saveFarmerDetail(FarmerRegisDetails farmer) {
-        String sql = "insert into farmer_details (farmerType, state, city,area,pincode) values(?,?,?,?,?)";
-        jdbcTemplate.update(sql, farmer.getFarmerType(),farmer.getState(),farmer.getCity(),farmer.getArea(),farmer.getPincode());
+        String sql = "insert into farmer_details (id,farmerType, state, city,area,pincode) values(?,?,?,?,?,?)";
+        jdbcTemplate.update(sql,farmer.getId(),farmer.getFarmerType(),farmer.getState(),farmer.getCity(),farmer.getArea(),farmer.getPincode());
     }
 
     @SuppressWarnings("unused")

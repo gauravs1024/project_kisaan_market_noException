@@ -7,6 +7,7 @@ public class FarmerRegisDetails {
     private String state;
     private String city;
     private String area;
+    private String pincode;
 
     public int getId() {
         return id;
@@ -56,6 +57,6 @@ public class FarmerRegisDetails {
         this.pincode = pincode;
     }
 
-    private String pincode;
+    
 
 }
