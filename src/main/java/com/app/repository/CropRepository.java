@@ -6,7 +6,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.app.model.Crop;
+import com.app.model.UserDtls;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -100,4 +103,35 @@ public class CropRepository {
         String sql = "DELETE FROM crops WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    public UserDtls findFarmerById(Long farmerId) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, this::mapUser, farmerId);
+    }
+
+    public List<Crop> findCropsByCode(String cropCode) {
+        String sql = "SELECT * FROM crops WHERE cropCode = ?";
+        return jdbcTemplate.query(sql, this::mapCrop, cropCode);
+    }
+    
+     private Crop mapCrop(ResultSet rs, int rowNum) throws SQLException {
+        Crop crop = new Crop();
+        crop.setId(rs.getLong("id"));
+        crop.setCropCode(rs.getString("cropCode"));
+        crop.setName(rs.getString("name"));
+        crop.setType(rs.getString("type"));
+        crop.setPrice(rs.getInt("price"));
+        crop.setQuantity(rs.getInt("quantity"));
+        crop.setFarmerId(rs.getLong("farmer_id"));
+        return crop;
+    }
+
+    private UserDtls mapUser(ResultSet rs, int rowNum) throws SQLException {
+        UserDtls user = new UserDtls();
+        user.setId(rs.getInt("id"));
+        user.setName(rs.getString("name"));
+        user.setPhoneNumber(rs.getString("phoneNumber"));
+        user.setPassword(rs.getString("password"));
+        return user;
+    }   
 }
