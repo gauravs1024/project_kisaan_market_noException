@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.app.dto.CropRequest;
 import com.app.model.Crop;
+import com.app.model.CropDetailsResponse;
 import com.app.service.CropService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -62,5 +64,11 @@ public class CropController {
         }
         cropService.deleteCrop(cropId);
         return ResponseEntity.ok("Crop deleted successfully");
+    }
+
+    
+    @PostMapping("/details")
+    public List<CropDetailsResponse> getCropDetails(@RequestBody CropRequest request) {
+        return cropService.getCropDetails(request.getCropCode());
     }
 }
