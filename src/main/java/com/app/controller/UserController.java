@@ -4,13 +4,10 @@ import com.app.dto.CropRequest;
 import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.service.UserService;
-
-// import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.List;
-
+import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-// import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,27 +20,27 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody UserDtls user) {
-        userService.registerUser(user);
-        return "User registered successfully!";
+    public ResponseEntity<?> register(@RequestBody UserDtls user) {
+        Map<String, Object> response = userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // @GetMapping("/csrf-token")
     // public CsrfToken getCsrfToken(HttpServletRequest request){
-    //     return (CsrfToken) request.getAttribute("_csrf");
+    // return (CsrfToken) request.getAttribute("_csrf");
     // }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDtls userDtls) {
-        UserDtls user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
+    public ResponseEntity<?> login(@RequestBody UserDtls userDtls) {
+        Map<String, Object> user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
         if (user != null) {
-            return "Login successful! Welcome, " + user.getName();
+            return ResponseEntity.ok(user);
         }
-        return "Invalid phone number or password.";
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid phone number or password.");
     }
 
     @PostMapping("/farmer-register")
-    public String farmerRegi(@RequestBody FarmerRegisDetails farmer){
+    public String farmerRegi(@RequestBody FarmerRegisDetails farmer) {
         userService.farmerRegister(farmer);
         return "Farmer registered successfully!";
     }
@@ -58,7 +55,8 @@ public class UserController {
             return ResponseEntity.ok(farmerNames); // 200 OK
         } catch (Exception e) {
             e.printStackTrace(); // Log the error
-            return ResponseEntity.status(500).build(); 
-        }}
+            return ResponseEntity.status(500).build();
+        }
+    }
 
 }
