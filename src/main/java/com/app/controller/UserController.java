@@ -20,9 +20,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody UserDtls user) {
-        userService.registerUser(user);
-        return "User registered successfully!";
+    public ResponseEntity<?> register(@RequestBody UserDtls user) {
+        Map<String, Object> response = userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // @GetMapping("/csrf-token")
@@ -32,12 +32,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDtls userDtls) {
-    Map<String, Object> user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
-    if (user != null) {
-        return ResponseEntity.ok(user);
+        Map<String, Object> user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid phone number or password.");
     }
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid phone number or password."); 
-}
 
     @PostMapping("/farmer-register")
     public String farmerRegi(@RequestBody FarmerRegisDetails farmer) {

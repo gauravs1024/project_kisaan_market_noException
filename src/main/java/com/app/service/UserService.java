@@ -18,9 +18,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void registerUser(UserDtls user) {
-        userRepository.save(user);
+    public Map<String, Object> registerUser(UserDtls user) {
+        userRepository.save(user); // Save the user to the database
+        UserDtls savedUser = userRepository.findByPhoneNumber(user.getPhoneNumber()); // Retrieve saved user details
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("userId", savedUser.getId());
+        response.put("name", savedUser.getName());
+        return response;
     }
+    
+    
 
     public void farmerRegister(FarmerRegisDetails farmer){
         userRepository.saveFarmerDetail(farmer);
