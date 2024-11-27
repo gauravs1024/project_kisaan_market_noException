@@ -1,12 +1,14 @@
 package com.app.model;
 
 public class CropDetailsResponse {
+    private String name;
     private Long farmerId;
     private String farmerName;
     private int price;
     private int quantity;
 
-    public CropDetailsResponse(Long farmerId, String farmerName, int price, int quantity) {
+    public CropDetailsResponse( String name,Long farmerId, String farmerName, int price, int quantity) {
+        this.name=name;
         this.farmerId = farmerId;
         this.farmerName = farmerName;
         this.price = price;
@@ -43,5 +45,13 @@ public class CropDetailsResponse {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
