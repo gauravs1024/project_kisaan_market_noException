@@ -68,8 +68,9 @@ public class CropService {
                 throw new RuntimeException("Farmer not found with ID: " + crop.getFarmerId());
             }
 
-            // Create response
+            
             responses.add(new CropDetailsResponse(
+                    crop.getName(),
                     crop.getFarmerId(),
                     farmer.getName(),
                     crop.getPrice(),
