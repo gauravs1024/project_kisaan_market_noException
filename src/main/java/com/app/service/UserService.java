@@ -22,7 +22,7 @@ public class UserService {
         userRepository.save(user); // Save the user to the database
         UserDtls savedUser = userRepository.findByPhoneNumber(user.getPhoneNumber()); // Retrieve saved user details
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("userId", savedUser.getId());
+        response.put("Id", savedUser.getId());
         response.put("name", savedUser.getName());
         return response;
     }
