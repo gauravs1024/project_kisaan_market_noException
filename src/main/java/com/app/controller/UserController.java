@@ -1,5 +1,6 @@
 package com.app.controller;
 
+import com.app.dto.BuyerDto;
 import com.app.dto.CropRequest;
 import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
@@ -59,4 +60,8 @@ public class UserController {
         }
     }
 
+    @PostMapping("/buyers")
+    public List<BuyerDto> getAllBuyers() {
+        return userService.getAllBuyers();
+    }
 }
