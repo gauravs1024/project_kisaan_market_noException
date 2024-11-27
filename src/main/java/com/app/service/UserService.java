@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.dto.BuyerDto;
 import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.repository.UserRepository;
@@ -7,6 +8,7 @@ import com.app.repository.UserRepository;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -48,5 +50,17 @@ public class UserService {
 
     public List<String> getFarmerNamesByCropCode(String cropCode) {
         return userRepository.findFarmerNamesByCropCode(cropCode);
+    }
+     public List<BuyerDto> getAllBuyers() {
+        List<UserDtls> buyers = userRepository.getAllBuyers();
+
+        // Map UserDtls to BuyerDto
+        return buyers.stream().map(user -> {
+            BuyerDto dto = new BuyerDto();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setPhoneNumber(user.getPhoneNumber());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

@@ -57,4 +57,18 @@ public class UserRepository {
                      "JOIN crops c ON u.id = c.farmer_id WHERE c.cropCode = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{cropCode}, String.class);
     }
+    public List<UserDtls> getAllBuyers() {
+        String sql = "SELECT id, name, phoneNumber FROM users WHERE role = 'BY'";
+
+        RowMapper<UserDtls> rowMapper = (rs, rowNum) -> {
+            UserDtls user = new UserDtls();
+            user.setId(rs.getInt("id"));
+            user.setName(rs.getString("name"));
+            user.setPhoneNumber(rs.getString("phoneNumber"));
+            return user;
+        };
+
+        return jdbcTemplate.query(sql, rowMapper);
+    }
 }
+
