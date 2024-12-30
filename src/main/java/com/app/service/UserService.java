@@ -1,10 +1,12 @@
 package com.app.service;
 
+import com.app.ExceptionHandlefile.ResourceNotFoundException;
 import com.app.dto.BuyerDto;
 import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.repository.UserRepository;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,21 +36,26 @@ public class UserService {
     }
 
     public Map<String, Object> login(String phoneNumber, String password) {
-        UserDtls user = userRepository.findByPhoneNumber(phoneNumber);
-        if (user != null && user.getPassword().equals(password)) {
-
-            Map<String, Object> userData = new LinkedHashMap<>();
-            userData.put("userId", user.getId());
-            userData.put("name", user.getName());
-            userData.put("role", user.getRole());
-            return userData;
-        }
-        return null;
+    UserDtls user = userRepository.findByPhoneNumber(phoneNumber);
+    if (user == null || !user.getPassword().equals(password)) {
+        throw new IllegalArgumentException("Invalid phone number or password.");
     }
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", user.getId());
+    response.put("name", user.getName());
+    response.put("role", user.getRole());
+    return response;
+}
+
 
     public List<String> getFarmerNamesByCropCode(String cropCode) {
-        return userRepository.findFarmerNamesByCropCode(cropCode);
+    List<String> farmers = userRepository.findFarmerNamesByCropCode(cropCode);
+    if (farmers.isEmpty()) {
+        throw new ResourceNotFoundException("No farmers found for crop code: " + cropCode);
     }
+    return farmers;
+}
+
 
     public List<BuyerDto> getAllBuyers() {
         List<UserDtls> buyers = userRepository.getAllBuyers();
