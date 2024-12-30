@@ -7,9 +7,10 @@ import com.app.model.UserDtls;
 import com.app.service.UserService;
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
+// import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api")
@@ -21,47 +22,103 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDtls user) {
-        Map<String, Object> response = userService.registerUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Map<String, Object>> register(@RequestBody UserDtls user) {
+        try {
+            Map<String, Object> response = userService.registerUser(user);
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "data", response
+            ));
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log the error
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", "An unexpected error occurred while registering the user."
+            ));
+        }
     }
 
-    // @GetMapping("/csrf-token")
-    // public CsrfToken getCsrfToken(HttpServletRequest request){
-    // return (CsrfToken) request.getAttribute("_csrf");
-    // }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDtls userDtls) {
-        Map<String, Object> user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
-        if (user != null) {
-            return ResponseEntity.ok(user);
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserDtls userDtls) {
+        try {
+            Map<String, Object> user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "data", user
+            ));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", ex.getMessage()
+            ));
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log the error
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", "An unexpected error occurred while logging in."
+            ));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid phone number or password.");
     }
 
     @PostMapping("/farmer-register")
-    public String farmerRegi(@RequestBody FarmerRegisDetails farmer) {
-        userService.farmerRegister(farmer);
-        return "Farmer registered successfully!";
+    public ResponseEntity<Map<String, Object>> registerFarmer(@RequestBody FarmerRegisDetails farmer) {
+        try {
+            userService.farmerRegister(farmer);
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Farmer registered successfully!"
+            ));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", ex.getMessage()
+            ));
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log the error
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", "An unexpected error occurred while registering the farmer."
+            ));
+        }
     }
 
     @PostMapping("/farmers")
-    public ResponseEntity<List<String>> getFarmerNamesByCropCode(@RequestBody CropRequest cropRequest) {
+    public ResponseEntity<Map<String, Object>> getFarmerNamesByCropCode(@RequestBody CropRequest cropRequest) {
         try {
             List<String> farmerNames = userService.getFarmerNamesByCropCode(cropRequest.getCropCode());
             if (farmerNames.isEmpty()) {
-                return ResponseEntity.noContent().build(); // 204 No Content
+                return ResponseEntity.ok(Map.of(
+                    "status", "success",
+                    "message", "No farmers found for the given crop code."
+                ));
             }
-            return ResponseEntity.ok(farmerNames); // 200 OK
-        } catch (Exception e) {
-            e.printStackTrace(); // Log the error
-            return ResponseEntity.status(500).build();
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "data", farmerNames
+            ));
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log the error
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", "An unexpected error occurred while fetching farmer names."
+            ));
         }
     }
 
     @PostMapping("/buyers")
-    public List<BuyerDto> getAllBuyers() {
-        return userService.getAllBuyers();
+    public ResponseEntity<Map<String, Object>> getAllBuyers() {
+        try {
+            List<BuyerDto> buyers = userService.getAllBuyers();
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "data", buyers
+            ));
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log the error
+            return ResponseEntity.ok(Map.of(
+                "status", "error",
+                "message", "An unexpected error occurred while fetching buyer details."
+            ));
+        }
     }
 }
