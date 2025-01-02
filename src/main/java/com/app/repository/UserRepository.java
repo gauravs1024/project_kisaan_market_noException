@@ -58,7 +58,7 @@ public class UserRepository {
         return jdbcTemplate.queryForList(sql, new Object[]{cropCode}, String.class);
     }
     public List<UserDtls> getAllBuyers() {
-        String sql = "SELECT id, name, phoneNumber FROM users WHERE role = 'BY'";
+        String sql = "SELECT id, name, phoneNumber FROM users WHERE role = 'BR'";
 
         RowMapper<UserDtls> rowMapper = (rs, rowNum) -> {
             UserDtls user = new UserDtls();
