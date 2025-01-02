@@ -2,6 +2,7 @@ package com.app.controller;
 
 import com.app.model.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -100,26 +101,14 @@ public class DriverController {
     }
 
     // Fetch all drivers
-    @PostMapping("/all")
-    public ResponseEntity<Object> getAllDrivers() {
+   @PostMapping("/all")
+    public ResponseEntity<List<Driver>> getAllDrivers() {
         try {
             String sql = "SELECT * FROM driver";
             List<Driver> drivers = jdbcTemplate.query(sql, driverRowMapper());
-
-            if (drivers.isEmpty()) {
-                return ResponseEntity.ok(Map.of(
-                        "error", true,
-                        "message", "No drivers found."));
-            }
-
-            return ResponseEntity.ok(Map.of(
-                    "error", false,
-                    "data", drivers));
+            return ResponseEntity.ok(drivers);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
-            return ResponseEntity.ok(Map.of(
-                    "error", true,
-                    "message", "An error occurred while fetching drivers. Please try again!"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
