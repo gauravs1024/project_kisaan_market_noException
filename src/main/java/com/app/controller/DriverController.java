@@ -52,6 +52,7 @@ public class DriverController {
     public ResponseEntity<Object> getDriver(@PathVariable int id) {
         try {
             String sql = "SELECT * FROM driver WHERE id = ?";
+            @SuppressWarnings("deprecation")
             Driver driver = jdbcTemplate.queryForObject(sql, new Object[]{id}, driverRowMapper());
 
             return ResponseEntity.ok(driver);

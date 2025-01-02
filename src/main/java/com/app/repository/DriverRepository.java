@@ -3,11 +3,7 @@ package com.app.repository;
 import com.app.model.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +15,6 @@ public class DriverRepository {
 
     // Save Driver
     public int saveDriver(Driver driver) {
-        String base64Image;
         String sql = "INSERT INTO driver (driverName, vehicleNo, address, ratePer100Km, maxCapacity, drivingExperience, phoneNo, rating, driverPhoto) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
@@ -37,6 +32,7 @@ public class DriverRepository {
     public Optional<Driver> findById(int driverId) {
         String sql = "SELECT * FROM driver WHERE driverId = ?";
         try {
+            @SuppressWarnings("deprecation")
             Driver driver = jdbcTemplate.queryForObject(sql, new Object[]{driverId}, new DriverRowMapper());
             return Optional.ofNullable(driver);
         } catch (Exception e) {
