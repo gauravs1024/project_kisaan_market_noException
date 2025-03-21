@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -15,8 +16,9 @@ public class FarmerController {
     private FarmerService farmerService;
 
     @PostMapping("/details")
-    public ResponseEntity<Map<String, Object>> getFarmerDetails(@RequestBody Map<String, Integer> requestBody) {
-        Map<String, Object> response = new java.util.HashMap<>();
+    public ResponseEntity<LinkedHashMap<String, Object>> getFarmerDetails(@RequestBody Map<String, Integer> requestBody) {
+        // Map<String, Object> response = new java.util.HashMap<>();
+        LinkedHashMap<String, Object> response = new LinkedHashMap<>();  
         try {
             Integer farmerId = requestBody.get("farmerId");
             if (farmerId == null) {
@@ -24,8 +26,8 @@ public class FarmerController {
                 response.put("message", "farmerId is required");
                 return ResponseEntity.ok(response); // Always return 200 OK
             }
-
-            Map<String, Object> farmerDetails = farmerService.getFarmerDetails(farmerId);
+            LinkedHashMap<String, Object> farmerDetails = new LinkedHashMap<>();  
+            farmerDetails = farmerService.getFarmerDetails(farmerId);
 
             if (farmerDetails == null || farmerDetails.isEmpty()) {
                 response.put("status", "error");

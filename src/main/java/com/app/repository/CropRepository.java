@@ -24,10 +24,9 @@ public class CropRepository {
                 crop.getCropCode(), crop.getPrice());
     }
 
-    @SuppressWarnings("deprecation")
     public List<Crop> getCrops(Long farmerId) {
         String sql = "SELECT * FROM crops WHERE farmer_id = ?";
-        return jdbcTemplate.query(sql, new Object[] { farmerId }, (rs, rowNum) -> {
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Crop crop = new Crop();
             crop.setId(rs.getLong("id"));
             crop.setName(rs.getString("name"));
@@ -37,13 +36,13 @@ public class CropRepository {
             crop.setCropCode(rs.getString("cropCode"));
             crop.setPrice(rs.getInt("price"));
             return crop;
-        });
+        }, new Object[] { farmerId });
     }
 
-    @SuppressWarnings("deprecation")
+   
     public Crop getCropById(Long id) {
         String sql = "SELECT * FROM crops WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[] { id }, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             Crop crop = new Crop();
             crop.setId(rs.getLong("id"));
             crop.setName(rs.getString("name"));
@@ -53,7 +52,7 @@ public class CropRepository {
             crop.setCropCode(rs.getString("cropCode"));
             crop.setPrice(rs.getInt("price"));
             return crop;
-        });
+        }, new Object[] { id });
     }
     
     private RowMapper<Crop> cropRowMapper() {
@@ -71,16 +70,15 @@ public class CropRepository {
     }
 
     // Method to fetch crop details by cropCode
-    @SuppressWarnings("deprecation")
     public Crop findCropByCode(String cropCode) {
         String sql = "SELECT * FROM crops WHERE cropCode = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{cropCode}, cropRowMapper());
+        return jdbcTemplate.queryForObject(sql, cropRowMapper(), new Object[]{cropCode});
     }
 
-    @SuppressWarnings("deprecation")
+
     public List<Crop> getCropsByFarmerId(Long farmerId) {
         String sql = "SELECT * FROM crops WHERE farmer_id = ?";
-        return jdbcTemplate.query(sql, new Object[] { farmerId }, (rs, rowNum) -> {
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Crop crop = new Crop();
             crop.setId(rs.getLong("id"));
             crop.setName(rs.getString("name"));
@@ -90,7 +88,7 @@ public class CropRepository {
             crop.setCropCode(rs.getString("cropCode"));
             crop.setPrice(rs.getInt("price"));
             return crop;
-        });
+        }, new Object[] { farmerId });
     }
 
     public int updateCrop(Long id, Crop crop) {

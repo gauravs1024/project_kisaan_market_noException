@@ -5,12 +5,13 @@ import com.app.dto.CropRequest;
 import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.service.UserService;
+
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 // import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/api")
@@ -24,17 +25,17 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody UserDtls user) {
         try {
-            Map<String, Object> response = userService.registerUser(user);
+            // Map<String, Object> response = userService.registerUser(user);
+              LinkedHashMap<String, Object> response = new LinkedHashMap<>(); 
+              response= userService.registerUser(user);
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "data", response
-            ));
+                    "status", "success",
+                    "data", response));
         } catch (Exception ex) {
             ex.printStackTrace(); // Log the error
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An unexpected error occurred while registering the user."
-            ));
+                    "status", "error",
+                    "message", "error occurred while registering user"));
         }
     }
 
@@ -43,20 +44,17 @@ public class UserController {
         try {
             Map<String, Object> user = userService.login(userDtls.getPhoneNumber(), userDtls.getPassword());
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "data", user
-            ));
+                    "status", "success",
+                    "data", user));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace(); // Log the error
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An unexpected error occurred while logging in."
-            ));
+                    "status", "error",
+                    "message", "An unexpected error occurred while logging in."));
         }
     }
 
@@ -65,20 +63,17 @@ public class UserController {
         try {
             userService.farmerRegister(farmer);
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "message", "Farmer registered successfully!"
-            ));
+                    "status", "success",
+                    "message", "Farmer registered successfully!"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace(); // Log the error
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An unexpected error occurred while registering the farmer."
-            ));
+                    "status", "error",
+                    "message", "An unexpected error occurred while registering the farmer."));
         }
     }
 
@@ -88,20 +83,17 @@ public class UserController {
             List<String> farmerNames = userService.getFarmerNamesByCropCode(cropRequest.getCropCode());
             if (farmerNames.isEmpty()) {
                 return ResponseEntity.ok(Map.of(
-                    "status", "success",
-                    "message", "No farmers found for the given crop code."
-                ));
+                        "status", "success",
+                        "message", "No farmers found for the given crop code."));
             }
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "data", farmerNames
-            ));
+                    "status", "success",
+                    "data", farmerNames));
         } catch (Exception ex) {
             ex.printStackTrace(); // Log the error
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An unexpected error occurred while fetching farmer names."
-            ));
+                    "status", "error",
+                    "message", "An unexpected error occurred while fetching farmer names."));
         }
     }
 
@@ -110,15 +102,13 @@ public class UserController {
         try {
             List<BuyerDto> buyers = userService.getAllBuyers();
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "data", buyers
-            ));
+                    "status", "success",
+                    "data", buyers));
         } catch (Exception ex) {
             ex.printStackTrace(); // Log the error
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An unexpected error occurred while fetching buyer details."
-            ));
+                    "status", "error",
+                    "message", "An unexpected error occurred while fetching buyer details."));
         }
     }
 }

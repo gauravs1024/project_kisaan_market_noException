@@ -22,10 +22,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Map<String, Object> registerUser(UserDtls user) {
+    public LinkedHashMap<String, Object> registerUser(UserDtls user) {
         userRepository.save(user); // Save the user to the database
         UserDtls savedUser = userRepository.findByPhoneNumber(user.getPhoneNumber()); // Retrieve saved user details
-        Map<String, Object> response = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> response = new LinkedHashMap<>(); 
         response.put("userId", savedUser.getId());
         response.put("name", savedUser.getName());
         return response;
@@ -36,26 +36,24 @@ public class UserService {
     }
 
     public Map<String, Object> login(String phoneNumber, String password) {
-    UserDtls user = userRepository.findByPhoneNumber(phoneNumber);
-    if (user == null || !user.getPassword().equals(password)) {
-        throw new IllegalArgumentException("Invalid phone number or password.");
+        UserDtls user = userRepository.findByPhoneNumber(phoneNumber);
+        if (user == null || !user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid phone number or password.");
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", user.getId());
+        response.put("name", user.getName());
+        response.put("role", user.getRole());
+        return response;
     }
-    Map<String, Object> response = new HashMap<>();
-    response.put("id", user.getId());
-    response.put("name", user.getName());
-    response.put("role", user.getRole());
-    return response;
-}
-
 
     public List<String> getFarmerNamesByCropCode(String cropCode) {
-    List<String> farmers = userRepository.findFarmerNamesByCropCode(cropCode);
-    if (farmers.isEmpty()) {
-        throw new ResourceNotFoundException("No farmers found for crop code: " + cropCode);
+        List<String> farmers = userRepository.findFarmerNamesByCropCode(cropCode);
+        if (farmers.isEmpty()) {
+            throw new ResourceNotFoundException("No farmers found for crop code: " + cropCode);
+        }
+        return farmers;
     }
-    return farmers;
-}
-
 
     public List<BuyerDto> getAllBuyers() {
         List<UserDtls> buyers = userRepository.getAllBuyers();

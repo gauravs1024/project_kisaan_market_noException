@@ -36,8 +36,7 @@ public class DriverController {
             // Check for duplicate entries based on unique fields (e.g., vehicleNo or
             // phoneNo)
             String checkSql = "SELECT COUNT(*) FROM driver WHERE vehicleNo = ? OR phoneNo = ?";
-            @SuppressWarnings("deprecation")
-            int count = jdbcTemplate.queryForObject(checkSql, new Object[] { vehicleNo, phoneNo }, Integer.class);
+            int count = jdbcTemplate.queryForObject(checkSql, Integer.class, new Object[] { vehicleNo, phoneNo });
 
             if (count > 0) {
                 return ResponseEntity.ok(Map.of(
@@ -83,8 +82,7 @@ public class DriverController {
 
             // Corrected SQL query to use 'driverId'
             String sql = "SELECT * FROM driver WHERE driverId = ?";
-            @SuppressWarnings("deprecation")
-            Driver driver = jdbcTemplate.queryForObject(sql, new Object[] { driverId }, driverRowMapper());
+            Driver driver = jdbcTemplate.queryForObject(sql, driverRowMapper(), new Object[] { driverId });
 
             return ResponseEntity.ok(Map.of(
                     "error", false,

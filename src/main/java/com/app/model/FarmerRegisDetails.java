@@ -3,6 +3,7 @@ package com.app.model;
 public class FarmerRegisDetails {
 
     private int id;
+    // private String farmername;
     private String farmerType;
     private String state;
     private String city;
@@ -16,6 +17,14 @@ public class FarmerRegisDetails {
     public void setId(int id) {
         this.id = id;
     }
+
+    // public String getFarmername() {
+    //     return farmername;
+    // }
+
+    // public void setFarmername(String farmername) {
+    //     this.farmername = farmername;
+    // }
 
     public String getFarmerType() {
         return farmerType;
