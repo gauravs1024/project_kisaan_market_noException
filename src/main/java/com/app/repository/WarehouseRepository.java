@@ -37,10 +37,9 @@ public class WarehouseRepository {
     }
 
     // Get a warehouse by ID
-    @SuppressWarnings("deprecation")
     public Warehouse getWarehouseById(int id) {
         String sql = "SELECT * FROM warehouse WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, warehouseRowMapper());
+        return jdbcTemplate.queryForObject(sql, warehouseRowMapper(), new Object[]{id});
     }
 
     // RowMapper for Warehouse

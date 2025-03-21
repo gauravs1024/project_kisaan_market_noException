@@ -9,7 +9,7 @@ import com.app.model.Crop;
 import com.app.model.CropDetailsResponse;
 import com.app.service.CropService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,20 +25,17 @@ public class CropController {
         try {
             cropService.addCrop(crop);
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "message", "Crop added successfully"
-            ));
+                    "status", "success",
+                    "message", "Crop added successfully"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while adding the crop."
-            ));
+                    "status", "error",
+                    "message", "An error occurred while adding the crop."));
         }
     }
 
@@ -51,21 +48,19 @@ public class CropController {
             }
             List<Crop> crops = cropService.getCrops(farmerId);
             return ResponseEntity.ok(Map.of(
-                "status", crops.isEmpty() ? "success" : "error",
-                "message", crops.isEmpty() ? "No crops found for the given farmer." : "Crops retrieved successfully.",
-                "data", crops
-            ));
+                    "status", crops.isEmpty() ? "success" : "error",
+                    "message",
+                    crops.isEmpty() ? "No crops found for the given farmer." : "Crops retrieved successfully.",
+                    "data", crops));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while retrieving crops."
-            ));
+                    "status", "error",
+                    "message", "An error occurred while retrieving crops."));
         }
     }
 
@@ -78,50 +73,57 @@ public class CropController {
             }
             Crop crop = cropService.getCropById(cropId);
             return ResponseEntity.ok(Map.of(
-                "status", crop != null ? "success" : "error",
-                "message", crop != null ? "Crop retrieved successfully." : "Crop not found.",
-                "data", crop
-            ));
+                    "status", crop != null ? "success" : "error",
+                    "message", crop != null ? "Crop retrieved successfully." : "Crop not found.",
+                    "data", crop));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while retrieving the crop."
-            ));
+                    "status", "error",
+                    "message", "An error occurred while retrieving the crop."));
         }
     }
 
-    @PostMapping("/getAll")
-    public ResponseEntity<?> getAllCrops(@RequestBody Map<String, Long> requestBody) {
-        try {
-            Long farmerId = requestBody.get("farmerId");
-            if (farmerId == null) {
-                throw new IllegalArgumentException("Farmer ID is required.");
-            }
-            List<Crop> crops = cropService.getCrops(farmerId);
-            return ResponseEntity.ok(Map.of(
-                "status", crops.isEmpty() ? "success" : "error",
-                "message", crops.isEmpty() ? "No crops found for the given farmer." : "Crops retrieved successfully.",
-                "data", crops
-            ));
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while retrieving crops."
-            ));
+   
+
+@PostMapping("/getAll")
+public ResponseEntity<?> getAllCrops(@RequestBody Map<String, Long> requestBody) {
+    try {
+        Long farmerId = requestBody.get("farmerId");
+        if (farmerId == null) {
+            throw new IllegalArgumentException("Farmer ID is required.");
         }
+        List<Crop> crops = cropService.getCrops(farmerId);
+
+        // Use LinkedHashMap to maintain insertion order
+        LinkedHashMap<String, Object> response = new LinkedHashMap<>();
+        response.put("status", crops.isEmpty() ? "error" : "success");
+        response.put("message", crops.isEmpty() ? "No crops found for the given farmer." : "Crops retrieved successfully.");
+        response.put("data", crops);
+
+        return ResponseEntity.ok(response);
+    } catch (IllegalArgumentException ex) {
+        // Use LinkedHashMap to maintain insertion order
+        LinkedHashMap<String, Object> errorResponse = new LinkedHashMap<>();
+        errorResponse.put("status", "error");
+        errorResponse.put("message", ex.getMessage());
+
+        return ResponseEntity.ok(errorResponse);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        // Use LinkedHashMap to maintain insertion order
+        LinkedHashMap<String, Object> errorResponse = new LinkedHashMap<>();
+        errorResponse.put("status", "error");
+        errorResponse.put("message", "An error occurred while retrieving crops.");
+
+        return ResponseEntity.ok(errorResponse);
     }
+}
+
 
     @PostMapping("/update")
     public ResponseEntity<?> updateCrop(@RequestBody Map<String, Object> requestBody) {
@@ -133,20 +135,17 @@ public class CropController {
             Crop cropDetails = new ObjectMapper().convertValue(requestBody.get("cropDetails"), Crop.class);
             cropService.updateCrop(cropId, cropDetails);
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "message", "Crop updated successfully"
-            ));
+                    "status", "success",
+                    "message", "Crop updated successfully"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while updating the crop."
-            ));
+                    "status", "error",
+                    "message", "An error occurred while updating the crop."));
         }
     }
 
@@ -159,20 +158,17 @@ public class CropController {
             }
             cropService.deleteCrop(cropId);
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "message", "Crop deleted successfully"
-            ));
+                    "status", "success",
+                    "message", "Crop deleted successfully"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", ex.getMessage()
-            ));
+                    "status", "error",
+                    "message", ex.getMessage()));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while deleting the crop."
-            ));
+                    "status", "error",
+                    "message", "An error occurred while deleting the crop."));
         }
     }
 
@@ -181,16 +177,15 @@ public class CropController {
         try {
             List<CropDetailsResponse> cropDetails = cropService.getCropDetails(request.getCropCode());
             return ResponseEntity.ok(Map.of(
-                "status", cropDetails.isEmpty() ? "success" : "error",
-                "message", cropDetails.isEmpty() ? "No crop details found." : "Crop details retrieved successfully.",
-                "data", cropDetails
-            ));
+                    "status", cropDetails.isEmpty() ? "Error" : "Success",
+                    "message",
+                    cropDetails.isEmpty() ? "No crop details found." : "Crop details retrieved successfully.",
+                    "data", cropDetails));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.ok(Map.of(
-                "status", "error",
-                "message", "An error occurred while retrieving crop details."
-            ));
+                    "status", "error",
+                    "message", "An error occurred while retrieving crop details."));
         }
     }
 }
