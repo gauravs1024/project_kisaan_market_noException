@@ -48,7 +48,7 @@ public class CropController {
             }
             List<Crop> crops = cropService.getCrops(farmerId);
             return ResponseEntity.ok(Map.of(
-                    "status", crops.isEmpty() ? "success" : "error",
+                    "status", crops.isEmpty() ? "Error" : "Success",
                     "message",
                     crops.isEmpty() ? "No crops found for the given farmer." : "Crops retrieved successfully.",
                     "data", crops));

@@ -5,6 +5,7 @@ import com.app.dto.BuyerDto;
 import com.app.model.FarmerRegisDetails;
 import com.app.model.UserDtls;
 import com.app.repository.UserRepository;
+import com.app.security.JwtUtil;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,20 +13,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     public LinkedHashMap<String, Object> registerUser(UserDtls user) {
-        userRepository.save(user); // Save the user to the database
-        UserDtls savedUser = userRepository.findByPhoneNumber(user.getPhoneNumber()); // Retrieve saved user details
-        LinkedHashMap<String, Object> response = new LinkedHashMap<>(); 
+        userRepository.save(user);
+        UserDtls savedUser = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        LinkedHashMap<String, Object> response = new LinkedHashMap<>();
         response.put("userId", savedUser.getId());
         response.put("name", savedUser.getName());
         return response;
@@ -40,10 +45,12 @@ public class UserService {
         if (user == null || !user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid phone number or password.");
         }
+        String token = jwtUtil.generateToken(phoneNumber);
         Map<String, Object> response = new HashMap<>();
         response.put("userId", user.getId());
         response.put("name", user.getName());
         response.put("role", user.getRole());
+        response.put("token", token);
         return response;
     }
 
@@ -57,8 +64,6 @@ public class UserService {
 
     public List<BuyerDto> getAllBuyers() {
         List<UserDtls> buyers = userRepository.getAllBuyers();
-
-        // Map UserDtls to BuyerDto
         return buyers.stream().map(user -> {
             BuyerDto dto = new BuyerDto();
             dto.setId(user.getId());
