@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,11 +24,15 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder; // 👈 Injected encoder
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     public LinkedHashMap<String, Object> registerUser(UserDtls user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // 🔐 Encrypt password
         userRepository.save(user);
         UserDtls savedUser = userRepository.findByPhoneNumber(user.getPhoneNumber());
         LinkedHashMap<String, Object> response = new LinkedHashMap<>();
@@ -42,7 +47,7 @@ public class UserService {
 
     public Map<String, Object> login(String phoneNumber, String password) {
         UserDtls user = userRepository.findByPhoneNumber(phoneNumber);
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) { // 🔐 Match encrypted password
             throw new IllegalArgumentException("Invalid phone number or password.");
         }
         String token = jwtUtil.generateToken(phoneNumber);
