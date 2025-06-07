@@ -59,7 +59,7 @@ public class DriverController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Driver not found!");
         }
-    }
+    }                 
 
     // Fetch all drivers
     @PostMapping("/all")
